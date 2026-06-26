@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>致我最爱的人 · 杜丹丹</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+      background: #0a0015;
+      cursor: none;
+    }
+
+    /* 星空背景 */
+    #stars-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    /* 鼠标拖尾画布 */
+    #trail-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    /* 自定义光标 */
+    .cursor {
+      position: fixed;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 105, 180, 0.8);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 200;
+      transform: translate(-50%, -50%);
+      transition: transform 0.1s ease, width 0.2s, height 0.2s;
+      mix-blend-mode: screen;
+    }
+
+    .cursor-dot {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      background: #ff69b4;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 201;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 10px #ff69b4, 0 0 20px #ff1493;
+    }
+
+    /* 主容器 */
+    .container {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    /* 浮动爱心 */
+    .floating-hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 20px;
+      opacity: 0;
+      animation: floatUp linear infinite;
+      filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.6));
+    }
+
+    @keyframes floatUp {
+      0% {
+        opacity: 0;
+        transform: translateY(100vh) rotate(0deg) scale(0.5);
+      }
+      10% {
+        opacity: 1;
+      }
+      90% {
+        opacity: 0.8;
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-10vh) rotate(360deg) scale(1.2);
+      }
+    }
+
+    /* 标题区域 */
+    .title-section {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .main-title {
+      font-size: clamp(2.5rem, 8vw, 5rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, #ff6b9d, #c44dff, #6b8cff, #ff6b9d);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: gradientShift 4s ease infinite, titleGlow 3s ease-in-out infinite;
+      letter-spacing: 0.15em;
+      text-shadow: none;
+      filter: drop-shadow(0 0 30px rgba(255, 105, 180, 0.5));
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    @keyframes titleGlow {
+      0%, 100% { filter: drop-shadow(0 0 20px rgba(255, 105, 180, 0.4)); }
+      50% { filter: drop-shadow(0 0 50px rgba(196, 77, 255, 0.8)); }
+    }
+
+    .subtitle {
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      color: rgba(255, 200, 220, 0.8);
+      margin-top: 15px;
+      letter-spacing: 0.5em;
+      animation: fadeInUp 1.5s ease 0.5s both;
+    }
+
+    /* 爱心环 */
+    .heart-ring {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 30px auto;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .heart-ring .big-heart {
+      font-size: 120px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation: heartbeat 1.2s ease-in-out infinite;
+      filter: drop-shadow(0 0 30px rgba(255, 20, 147, 0.8));
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      15% { transform: translate(-50%, -50%) scale(1.15); }
+      30% { transform: translate(-50%, -50%) scale(1); }
+      45% { transform: translate(-50%, -50%) scale(1.1); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.3); }
+    }
+
+    /* 旋转光环 */
+    .orbit {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 220px;
+      height: 220px;
+      transform: translate(-50%, -50%);
+      border: 2px solid transparent;
+      border-radius: 50%;
+      border-top-color: rgba(255, 105, 180, 0.6);
+      border-right-color: rgba(196, 77, 255, 0.4);
+      animation: spin 3s linear infinite;
+    }
+
+    .orbit:nth-child(2) {
+      width: 260px;
+      height: 260px;
+      border-top-color: rgba(107, 140, 255, 0.5);
+      border-left-color: rgba(255, 105, 180, 0.3);
+      animation: spin 5s linear infinite reverse;
+    }
+
+    @keyframes spin {
+      from { transform: translate(-50%, -50%) rotate(0deg); }
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* 表白卡片 */
+    .love-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      max-width: 700px;
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: linear-gradient(135deg, rgba(255, 105, 180, 0.1), rgba(196, 77, 255, 0.1));
+      border: 1px solid rgba(255, 105, 180, 0.3);
+      border-radius: 20px;
+      padding: 25px 35px;
+      backdrop-filter: blur(10px);
+      transform: translateY(30px);
+      opacity: 0;
+      animation: cardSlideIn 0.8s ease forwards;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+      animation: shimmer 3s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) rotate(45deg); }
+    }
+
+    .card:nth-child(1) { animation-delay: 1s; }
+    .card:nth-child(2) { animation-delay: 1.4s; }
+    .card:nth-child(3) { animation-delay: 1.8s; }
+
+    @keyframes cardSlideIn {
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .card-label {
+      font-size: 0.85rem;
+      color: #ff69b4;
+      letter-spacing: 0.3em;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .card-name {
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 10px;
+      text-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+    }
+
+    .card-text {
+      font-size: clamp(0.95rem, 2.5vw, 1.1rem);
+      color: rgba(255, 220, 230, 0.9);
+      line-height: 1.8;
+    }
+
+  </style>
+</head>
+<body>
+
+  <canvas id="stars-canvas"></canvas>
+  <canvas id="trail-canvas"></canvas>
+
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-dot" id="cursor-dot"></div>
+
+  <div class="floating-hearts" id="floating-hearts"></div>
+
+  <div class="container">
+    <div class="title-section">
+      <h1 class="main-title">永远爱你</h1>
+      <p class="subtitle">OUR FOREVER LOVE</p>
+    </div>
+
+    <div class="heart-ring">
+      <div class="orbit"></div>
+      <div class="orbit"></div>
+      <span class="big-heart">❤️</span>
+    </div>
+
+    <div class="love-cards">
+      <div class="card">
+        <div class="card-label">💕 致我最爱的妻子</div>
+        <div class="card-name">杜丹丹</div>
+        <div class="card-text">
+          丹丹，你是我生命中最美的风景。每一个与你相伴的日子，都是上天赐予我最珍贵的礼物。愿用余生所有的温柔，守护你的笑容，陪你走过春夏秋冬。
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">👨‍👩‍👦 我们的小宝贝</div>
+        <div class="card-name">张博文</div>
+        <div class="card-text">
+          博文，你是爸爸妈妈爱情的结晶，是我们最大的骄傲。愿你健康快乐成长，永远被爱包围。爸爸和妈妈会一起，给你最温暖的家。
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">🏠 我们的家</div>
+        <div class="card-name">一生一世 · 不离不弃</div>
+        <div class="card-text">
+          有你们在的地方，就是天堂。丹丹、博文，我爱你们，直到宇宙尽头，直到时间停止。这一生，下一世，生生世世，只爱你们。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ========== 星空背景 ==========
+    const starsCanvas = document.getElementById('stars-canvas');
+    const starsCtx = starsCanvas.getContext('2d');
+    let stars = [];
+
+    function initStars() {
+      starsCanvas.width = window.innerWidth;
+      starsCanvas.height = window.innerHeight;
+      stars = [];
+      for (let i = 0; i < 200; i++) {
+        stars.push({
+          x: Math.random() * starsCanvas.width,
+          y: Math.random() * starsCanvas.height,
+          radius: Math.random() * 1.5 + 0.5,
+          speed: Math.random() * 0.3 + 0.1,
+          opacity: Math.random(),
+          twinkleSpeed: Math.random() * 0.02 + 0.01
+        });
+      }
+    }
+
+    function drawStars() {
+      starsCtx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
+      stars.forEach(star => {
+        star.opacity += star.twinkleSpeed;
+        if (star.opacity > 1 || star.opacity < 0.2) star.twinkleSpeed *= -1;
+        starsCtx.beginPath();
+        starsCtx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        starsCtx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`;
+        starsCtx.fill();
+        star.y -= star.speed;
+        if (star.y < 0) {
+          star.y = starsCanvas.height;
+          star.x = Math.random() * starsCanvas.width;
+        }
+      });
+      requestAnimationFrame(drawStars);
+    }
+
+    // ========== 鼠标拖尾 ==========
+    const trailCanvas = document.getElementById('trail-canvas');
+    const trailCtx = trailCanvas.getContext('2d');
+    let particles = [];
+    let mouseX = 0, mouseY = 0;
+
+    function initTrail() {
+      trailCanvas.width = window.innerWidth;
+      trailCanvas.height = window.innerHeight;
+    }
+
+    class Particle {
+      constructor(x, y) {
+        this.x = x;
+        this.y = y;
+        this.size = Math.random() * 8 + 4;
+        this.speedX = (Math.random() - 0.5) * 2;
+        this.speedY = (Math.random() - 0.5) * 2;
+        this.life = 1;
+        this.decay = Math.random() * 0.02 + 0.015;
+        const colors = [
+          'rgba(255, 105, 180, ',
+          'rgba(255, 20, 147, ',
+          'rgba(196, 77, 255, ',
+          'rgba(255, 182, 193, ',
+          'rgba(255, 105, 180, '
+        ];
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+        this.isHeart = Math.random() > 0.6;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        this.life -= this.decay;
+        this.size *= 0.98;
+      }
+
+      draw() {
+        trailCtx.save();
+        trailCtx.globalAlpha = this.life;
+        if (this.isHeart && this.size > 3) {
+          trailCtx.font = `${this.size * 2}px serif`;
+          trailCtx.fillText('♥', this.x - this.size, this.y);
+        } else {
+          trailCtx.beginPath();
+          trailCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          trailCtx.fillStyle = this.color + this.life + ')';
+          trailCtx.shadowBlur = 15;
+          trailCtx.shadowColor = this.color + '1)';
+          trailCtx.fill();
+        }
+        trailCtx.restore();
+      }
+    }
+
+    function animateTrail() {
+      trailCtx.clearRect(0, 0, trailCanvas.width, trailCanvas.height);
+      for (let i = particles.length - 1; i >= 0; i--) {
+        particles[i].update();
+        particles[i].draw();
+        if (particles[i].life <= 0) particles.splice(i, 1);
+      }
+      requestAnimationFrame(animateTrail);
+    }
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      for (let i = 0; i < 3; i++) {
+        particles.push(new Particle(
+          mouseX + (Math.random() - 0.5) * 10,
+          mouseY + (Math.random() - 0.5) * 10
+        ));
+      }
+    });
+
+    // ========== 自定义光标 ==========
+    const cursor = document.getElementById('cursor');
+    const cursorDot = document.getElementById('cursor-dot');
+
+    document.addEventListener('mousemove', (e) => {
+      cursor.style.left = e.clientX + 'px';
+      cursor.style.top = e.clientY + 'px';
+      cursorDot.style.left = e.clientX + 'px';
+      cursorDot.style.top = e.clientY + 'px';
+    });
+
+    document.addEventListener('mousedown', () => {
+      cursor.style.width = '30px';
+      cursor.style.height = '30px';
+      for (let i = 0; i < 15; i++) {
+        particles.push(new Particle(mouseX, mouseY));
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      cursor.style.width = '20px';
+      cursor.style.height = '20px';
+    });
+
+    // ========== 浮动爱心 ==========
+    const heartsContainer = document.getElementById('floating-hearts');
+    const heartEmojis = ['❤️', '💕', '💖', '💗', '💓', '♥️', '💝'];
+
+    function createFloatingHeart() {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+      heart.style.left = Math.random() * 100 + '%';
+      heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+      heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+      heart.style.animationDelay = Math.random() * 2 + 's';
+      heartsContainer.appendChild(heart);
+      setTimeout(() => heart.remove(), 12000);
+    }
+
+    setInterval(createFloatingHeart, 800);
+
+    // ========== 点击绽放爱心 ==========
+    document.addEventListener('click', (e) => {
+      for (let i = 0; i < 20; i++) {
+        const angle = (Math.PI * 2 / 20) * i;
+        const p = new Particle(e.clientX, e.clientY);
+        p.speedX = Math.cos(angle) * (Math.random() * 3 + 2);
+        p.speedY = Math.sin(angle) * (Math.random() * 3 + 2);
+        p.size = Math.random() * 10 + 6;
+        p.isHeart = true;
+        particles.push(p);
+      }
+    });
+
+    // ========== 初始化 ==========
+    initStars();
+    initTrail();
+    drawStars();
+    animateTrail();
+
+    window.addEventListener('resize', () => {
+      initStars();
+      initTrail();
+    });
+
+    // 初始飘几个爱心
+    for (let i = 0; i < 10; i++) {
+      setTimeout(createFloatingHeart, i * 300);
+    }
+  </script>
+</body>
+</html>
