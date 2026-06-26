@@ -532,70 +532,81 @@
 
     /* 相册 */
     .photo-section {
-      max-width: 1200px;
+      max-width: 480px;
       width: 100%;
-      margin: 0 0 36px;
+      margin: 0 auto 30px;
       opacity: 0;
       animation: fadeInUp 1s ease 0.9s forwards;
     }
 
     .photo-section .section-title {
       text-align: center;
-      margin-bottom: 28px;
+      margin-bottom: 20px;
+      font-size: clamp(1.1rem, 3.5vw, 1.5rem);
     }
 
     .photo-group {
-      margin-bottom: 28px;
+      margin-bottom: 20px;
     }
 
     .photo-group-title {
-      font-size: 1rem;
+      font-size: 0.85rem;
       color: rgba(255, 200, 220, 0.9);
-      letter-spacing: 0.2em;
-      margin-bottom: 14px;
-      padding-left: 4px;
+      letter-spacing: 0.15em;
+      margin-bottom: 10px;
+      text-align: center;
     }
 
     .photo-grid {
       display: grid;
-      gap: 16px;
+      gap: 12px;
     }
 
     .photo-grid.wedding {
       grid-template-columns: repeat(2, 1fr);
+      max-width: 280px;
+      margin: 0 auto;
     }
 
     .photo-grid.growth {
       grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
     }
 
     .photo-item {
       position: relative;
-      border-radius: 16px;
+      border-radius: 12px;
       overflow: hidden;
       border: 2px solid rgba(255, 105, 180, 0.35);
-      aspect-ratio: 4 / 3;
       background: rgba(255, 105, 180, 0.08);
-      box-shadow: 0 8px 32px rgba(255, 105, 180, 0.15);
-      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+      box-shadow: 0 4px 20px rgba(255, 105, 180, 0.12);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .photo-item.portrait {
+      aspect-ratio: 1031 / 1554;
+    }
+
+    .photo-item.growth {
+      aspect-ratio: 1;
     }
 
     .photo-item:hover {
       border-color: rgba(255, 105, 180, 0.7);
-      box-shadow: 0 12px 40px rgba(196, 77, 255, 0.25);
-      transform: translateY(-4px);
+      box-shadow: 0 6px 24px rgba(196, 77, 255, 0.2);
     }
 
     .photo-item img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
       display: block;
-      transition: transform 0.5s ease;
+      background: rgba(10, 0, 21, 0.4);
     }
 
-    .photo-item:hover img {
-      transform: scale(1.06);
+    .photo-item.portrait:hover img,
+    .photo-item.growth:hover img {
+      transform: none;
     }
 
     .photo-caption {
@@ -603,12 +614,13 @@
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 28px 14px 12px;
+      padding: 20px 8px 8px;
       background: linear-gradient(transparent, rgba(10, 0, 21, 0.9));
       color: rgba(255, 230, 240, 0.95);
-      font-size: 0.85rem;
-      letter-spacing: 0.1em;
+      font-size: 0.7rem;
+      letter-spacing: 0.05em;
       pointer-events: none;
+      text-align: center;
     }
 
     /* 图片灯箱 */
@@ -710,12 +722,12 @@
       <div class="photo-group">
         <div class="photo-group-title">💒 结婚纪念 · 2020.11.21</div>
         <div class="photo-grid wedding">
-          <div class="photo-item" data-caption="我们的婚礼 · 最美的你">
-            <img src="imgs/z1.png" alt="结婚照" loading="lazy">
+          <div class="photo-item portrait" data-caption="我们的婚礼 · 最美的你">
+            <img src="imgs/z1.png" alt="结婚照" loading="lazy" width="1031" height="1554">
             <span class="photo-caption">我们的婚礼 · 最美的你</span>
           </div>
-          <div class="photo-item" data-caption="执子之手 · 与子偕老">
-            <img src="imgs/z2.png" alt="结婚照" loading="lazy">
+          <div class="photo-item portrait" data-caption="执子之手 · 与子偕老">
+            <img src="imgs/z2.png" alt="结婚照" loading="lazy" width="1031" height="1554">
             <span class="photo-caption">执子之手 · 与子偕老</span>
           </div>
         </div>
@@ -724,17 +736,17 @@
       <div class="photo-group">
         <div class="photo-group-title">👶 博文成长记</div>
         <div class="photo-grid growth">
-          <div class="photo-item" data-caption="刚出生 · 2022.02.21">
+          <div class="photo-item growth" data-caption="刚出生 · 2022.02.21">
             <img src="imgs/z3.png" alt="博文刚出生" loading="lazy">
-            <span class="photo-caption">刚出生 · 2022.02.21</span>
+            <span class="photo-caption">刚出生</span>
           </div>
-          <div class="photo-item" data-caption="两岁啦 · 天真烂漫">
+          <div class="photo-item growth" data-caption="两岁啦 · 天真烂漫">
             <img src="imgs/z4.png" alt="博文两岁" loading="lazy">
-            <span class="photo-caption">两岁啦 · 天真烂漫</span>
+            <span class="photo-caption">两岁啦</span>
           </div>
-          <div class="photo-item" data-caption="四岁啦 · 快乐成长">
+          <div class="photo-item growth" data-caption="四岁啦 · 快乐成长">
             <img src="imgs/z5.png" alt="博文四岁" loading="lazy">
-            <span class="photo-caption">四岁啦 · 快乐成长</span>
+            <span class="photo-caption">四岁啦</span>
           </div>
         </div>
       </div>
