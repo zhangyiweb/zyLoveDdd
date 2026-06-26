@@ -13,8 +13,9 @@
 
     html, body {
       width: 100%;
-      height: 100%;
-      overflow: hidden;
+      min-height: 100%;
+      overflow-x: hidden;
+      overflow-y: auto;
       font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
       background: #0a0015;
       cursor: none;
@@ -72,12 +73,12 @@
       position: relative;
       z-index: 10;
       width: 100%;
-      height: 100%;
+      min-height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 20px;
+      justify-content: flex-start;
+      padding: 40px 20px 60px;
     }
 
     /* 浮动爱心 */
@@ -219,9 +220,9 @@
       display: flex;
       flex-direction: column;
       gap: 20px;
-      max-width: 700px;
       width: 100%;
-      margin-top: 20px;
+      flex: 1;
+      min-width: 0;
     }
 
     .card {
@@ -230,9 +231,9 @@
       border-radius: 20px;
       padding: 25px 35px;
       backdrop-filter: blur(10px);
-      transform: translateY(30px);
+      transform: translateX(30px);
       opacity: 0;
-      animation: cardSlideIn 0.8s ease forwards;
+      animation: cardSlideInRight 0.8s ease forwards;
       position: relative;
       overflow: hidden;
     }
@@ -253,9 +254,16 @@
       100% { transform: translateX(100%) rotate(45deg); }
     }
 
-    .card:nth-child(1) { animation-delay: 1s; }
-    .card:nth-child(2) { animation-delay: 1.4s; }
-    .card:nth-child(3) { animation-delay: 1.8s; }
+    .card:nth-child(1) { animation-delay: 2s; }
+    .card:nth-child(2) { animation-delay: 2.3s; }
+    .card:nth-child(3) { animation-delay: 2.6s; }
+
+    @keyframes cardSlideInRight {
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
 
     @keyframes cardSlideIn {
       to {
@@ -297,6 +305,226 @@
       line-height: 1.8;
     }
 
+    /* 相爱统计 */
+    .love-stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: center;
+      max-width: 1200px;
+      width: 100%;
+      margin: 10px 0 30px;
+      opacity: 0;
+      animation: fadeInUp 1s ease 0.8s forwards;
+    }
+
+    .stat-box {
+      flex: 1;
+      min-width: 260px;
+      background: linear-gradient(135deg, rgba(255, 105, 180, 0.15), rgba(107, 140, 255, 0.12));
+      border: 1px solid rgba(255, 105, 180, 0.35);
+      border-radius: 18px;
+      padding: 22px 24px;
+      text-align: center;
+      backdrop-filter: blur(12px);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-box::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(255, 105, 180, 0.2), transparent 70%);
+      pointer-events: none;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: #ff69b4;
+      letter-spacing: 0.25em;
+      margin-bottom: 10px;
+    }
+
+    .stat-number {
+      font-size: clamp(2.2rem, 7vw, 3.2rem);
+      font-weight: 900;
+      background: linear-gradient(135deg, #ff6b9d, #ffd1dc, #c44dff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+      animation: numberPulse 2.5s ease-in-out infinite;
+    }
+
+    .stat-unit {
+      font-size: 1rem;
+      color: rgba(255, 200, 220, 0.9);
+      margin-left: 4px;
+      -webkit-text-fill-color: rgba(255, 200, 220, 0.9);
+    }
+
+    .stat-desc {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: rgba(255, 220, 230, 0.75);
+      line-height: 1.6;
+    }
+
+    @keyframes numberPulse {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.3)); }
+      50% { filter: drop-shadow(0 0 20px rgba(196, 77, 255, 0.6)); }
+    }
+
+    /* 左右主布局 */
+    .main-content {
+      display: flex;
+      gap: 36px;
+      max-width: 1200px;
+      width: 100%;
+      align-items: flex-start;
+      opacity: 0;
+      animation: fadeInUp 1s ease 1s forwards;
+    }
+
+    .main-content .section-title {
+      text-align: left;
+      margin-bottom: 24px;
+    }
+
+    /* 时间线 */
+    .timeline-section {
+      flex: 1;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .love-side {
+      flex: 1;
+      min-width: 0;
+      width: 100%;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
+      color: #fff;
+      margin-bottom: 28px;
+      letter-spacing: 0.2em;
+      text-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+    }
+
+    .section-title span {
+      color: #ff69b4;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 32px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 10px;
+      top: 8px;
+      bottom: 8px;
+      width: 2px;
+      background: linear-gradient(180deg, #ff6b9d, #c44dff, #6b8cff);
+      box-shadow: 0 0 12px rgba(255, 105, 180, 0.5);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 24px;
+      padding: 18px 22px;
+      background: linear-gradient(135deg, rgba(255, 105, 180, 0.08), rgba(196, 77, 255, 0.06));
+      border: 1px solid rgba(255, 105, 180, 0.25);
+      border-radius: 16px;
+      backdrop-filter: blur(8px);
+      transform: translateX(-20px);
+      opacity: 0;
+      animation: timelineIn 0.7s ease forwards;
+    }
+
+    .timeline-item:nth-child(1) { animation-delay: 1.2s; }
+    .timeline-item:nth-child(2) { animation-delay: 1.4s; }
+    .timeline-item:nth-child(3) { animation-delay: 1.6s; }
+    .timeline-item:nth-child(4) { animation-delay: 1.8s; }
+
+    @keyframes timelineIn {
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -28px;
+      top: 24px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #ff69b4;
+      border: 3px solid #0a0015;
+      box-shadow: 0 0 12px rgba(255, 105, 180, 0.8);
+      animation: dotGlow 2s ease-in-out infinite;
+    }
+
+    @keyframes dotGlow {
+      0%, 100% { box-shadow: 0 0 8px rgba(255, 105, 180, 0.6); }
+      50% { box-shadow: 0 0 18px rgba(196, 77, 255, 0.9); }
+    }
+
+    .timeline-date {
+      font-size: 0.8rem;
+      color: #ff69b4;
+      letter-spacing: 0.15em;
+      margin-bottom: 6px;
+    }
+
+    .timeline-event {
+      font-size: clamp(1.1rem, 3vw, 1.35rem);
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .timeline-note {
+      font-size: 0.9rem;
+      color: rgba(255, 220, 230, 0.75);
+      line-height: 1.6;
+    }
+
+    .timeline-days {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 4px 12px;
+      font-size: 0.8rem;
+      color: rgba(255, 200, 220, 0.9);
+      background: rgba(255, 105, 180, 0.15);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 105, 180, 0.3);
+    }
+
+    @media (max-width: 900px) {
+      .main-content {
+        flex-direction: column;
+        gap: 40px;
+      }
+
+      .main-content .section-title {
+        text-align: center;
+      }
+
+      .card {
+        transform: translateY(30px);
+        animation-name: cardSlideIn;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -321,28 +549,84 @@
       <span class="big-heart">❤️</span>
     </div>
 
-    <div class="love-cards">
-      <div class="card">
-        <div class="card-label">💕 致我最爱的妻子</div>
-        <div class="card-name">杜丹丹</div>
-        <div class="card-text">
-          丹丹，你是我生命中最美的风景。每一个与你相伴的日子，都是上天赐予我最珍贵的礼物。愿用余生所有的温柔，守护你的笑容，陪你走过春夏秋冬。
+    <div class="love-stats">
+      <div class="stat-box">
+        <div class="stat-label">💑 相识相知</div>
+        <div>
+          <span class="stat-number" id="meet-days">0</span>
+          <span class="stat-unit">天</span>
+        </div>
+        <div class="stat-desc">自 2019 年 5 月 2 日起，每一天都因你而闪耀</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-label">💍 结婚纪念</div>
+        <div>
+          <span class="stat-number" id="married-years">0</span>
+          <span class="stat-unit">年</span>
+          <span class="stat-number" id="married-days" style="font-size: clamp(1.6rem, 5vw, 2.2rem);">0</span>
+          <span class="stat-unit">天</span>
+        </div>
+        <div class="stat-desc" id="anniversary-desc">钟爱彼此，白头偕老</div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="timeline-section">
+        <h2 class="section-title">我们的 <span>爱情时间线</span></h2>
+        <div class="timeline" id="timeline">
+          <div class="timeline-item" data-date="2019-05-02">
+            <div class="timeline-date">2019 · 05 · 02</div>
+            <div class="timeline-event">🌸 相识相知</div>
+            <div class="timeline-note">命运让我们相遇，从那一刻起，我的世界有了光。</div>
+            <span class="timeline-days" data-from="2019-05-02"></span>
+          </div>
+          <div class="timeline-item" data-date="2020-10-28">
+            <div class="timeline-date">2020 · 10 · 28</div>
+            <div class="timeline-event">📜 领证结婚</div>
+            <div class="timeline-note">一纸婚书，一生承诺，从此我们是彼此最亲的人。</div>
+            <span class="timeline-days" data-from="2020-10-28"></span>
+          </div>
+          <div class="timeline-item" data-date="2020-11-21">
+            <div class="timeline-date">2020 · 11 · 21</div>
+            <div class="timeline-event">💒 浪漫婚礼</div>
+            <div class="timeline-note">在亲朋好友的祝福中，许下相守一生的誓言。</div>
+            <span class="timeline-days" data-from="2020-11-21"></span>
+          </div>
+          <div class="timeline-item" data-date="2022-02-21">
+            <div class="timeline-date">2022 · 02 · 21</div>
+            <div class="timeline-event">👶 张博文出生</div>
+            <div class="timeline-note">小宝贝来到这个世界，我们的家更加完整、更加幸福。</div>
+            <span class="timeline-days" data-from="2022-02-21"></span>
+          </div>
         </div>
       </div>
 
-      <div class="card">
-        <div class="card-label">👨‍👩‍👦 我们的小宝贝</div>
-        <div class="card-name">张博文</div>
-        <div class="card-text">
-          博文，你是爸爸妈妈爱情的结晶，是我们最大的骄傲。愿你健康快乐成长，永远被爱包围。爸爸和妈妈会一起，给你最温暖的家。
-        </div>
-      </div>
+      <div class="love-side">
+        <h2 class="section-title">写给你们的 <span>心里话</span></h2>
+        <div class="love-cards">
+          <div class="card">
+            <div class="card-label">💕 致我最爱的妻子</div>
+            <div class="card-name">杜丹丹</div>
+            <div class="card-text">
+              丹丹，你是我生命中最美的风景。每一个与你相伴的日子，都是上天赐予我最珍贵的礼物。愿用余生所有的温柔，守护你的笑容，陪你走过春夏秋冬。
+            </div>
+          </div>
 
-      <div class="card">
-        <div class="card-label">🏠 我们的家</div>
-        <div class="card-name">一生一世 · 不离不弃</div>
-        <div class="card-text">
-          有你们在的地方，就是天堂。丹丹、博文，我爱你们，直到宇宙尽头，直到时间停止。这一生，下一世，生生世世，只爱你们。
+          <div class="card">
+            <div class="card-label">👨‍👩‍👦 我们的小宝贝</div>
+            <div class="card-name">张博文</div>
+            <div class="card-text">
+              博文，你是爸爸妈妈爱情的结晶，是我们最大的骄傲。愿你健康快乐成长，永远被爱包围。爸爸和妈妈会一起，给你最温暖的家。
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-label">🏠 我们的家</div>
+            <div class="card-name">一生一世 · 不离不弃</div>
+            <div class="card-text">
+              有你们在的地方，便是我此生最温暖的港湾。丹丹、博文，我爱你们，直到宇宙尽头，直到时间停止。这一生，下一世，生生世世，只爱你们。
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -519,6 +803,93 @@
         particles.push(p);
       }
     });
+
+    // ========== 相爱天数计算 ==========
+    const MEET_DATE = new Date(2019, 4, 2);
+    const WEDDING_DATE = new Date(2020, 10, 21);
+
+    function parseDate(str) {
+      const [y, m, d] = str.split('-').map(Number);
+      return new Date(y, m - 1, d);
+    }
+
+    function todayStart() {
+      const now = new Date();
+      return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    }
+
+    function daysBetween(start, end) {
+      return Math.floor((end - start) / 86400000);
+    }
+
+    function daysInclusive(start, end) {
+      return daysBetween(start, end) + 1;
+    }
+
+    function getMarriageDuration(weddingDate, today) {
+      let years = today.getFullYear() - weddingDate.getFullYear();
+      let lastAnniversary = new Date(today.getFullYear(), weddingDate.getMonth(), weddingDate.getDate());
+      if (today < lastAnniversary) {
+        years--;
+        lastAnniversary = new Date(today.getFullYear() - 1, weddingDate.getMonth(), weddingDate.getDate());
+      }
+      const daysAfterAnniversary = daysBetween(lastAnniversary, today);
+      const nextAnniversary = new Date(
+        lastAnniversary.getFullYear() + 1,
+        weddingDate.getMonth(),
+        weddingDate.getDate()
+      );
+      const daysToNext = daysBetween(today, nextAnniversary);
+      return { years, daysAfterAnniversary, daysToNext };
+    }
+
+    function animateNumber(el, target) {
+      const duration = 1500;
+      const start = performance.now();
+      const from = 0;
+      function tick(now) {
+        const progress = Math.min((now - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(from + (target - from) * eased);
+        if (progress < 1) requestAnimationFrame(tick);
+        else el.textContent = target;
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function updateLoveStats() {
+      const today = todayStart();
+      const meetDays = daysInclusive(MEET_DATE, today);
+      const marriage = getMarriageDuration(WEDDING_DATE, today);
+
+      animateNumber(document.getElementById('meet-days'), meetDays);
+      animateNumber(document.getElementById('married-years'), marriage.years);
+      animateNumber(document.getElementById('married-days'), marriage.daysAfterAnniversary);
+
+      const desc = marriage.daysAfterAnniversary === 0
+        ? `今天是我们的第 ${marriage.years} 个结婚纪念日 🎉`
+        : `第 ${marriage.years + 1} 个结婚纪念日，还有 ${marriage.daysToNext} 天`;
+      document.getElementById('anniversary-desc').textContent = desc;
+
+      document.querySelectorAll('.timeline-days').forEach(el => {
+        const from = parseDate(el.dataset.from);
+        const days = daysInclusive(from, today);
+        const label = el.closest('.timeline-item').querySelector('.timeline-event').textContent.replace(/^[^\s]+\s/, '');
+        el.textContent = `距今已 ${days} 天 · ${label}`;
+      });
+    }
+
+    function scheduleMidnightUpdate() {
+      const now = new Date();
+      const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+      setTimeout(() => {
+        updateLoveStats();
+        scheduleMidnightUpdate();
+      }, tomorrow - now);
+    }
+
+    updateLoveStats();
+    scheduleMidnightUpdate();
 
     // ========== 初始化 ==========
     initStars();
